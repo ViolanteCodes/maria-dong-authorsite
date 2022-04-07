@@ -1,0 +1,137 @@
+{% extends 'content/base.html' %}
+{% load static %}
+
+{% block title %}Sample Blog with Components - powered by ButterCMS{% endblock %}
+{% block description %}Sample Landing Page with Components - powered by ButterCMS{% endblock %}
+
+{% block css_extra %}
+{% endblock css_extra %}
+
+{% block navigation_menu %}
+
+<div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+    <div class="ms-auto">
+        <ul id="nav" class="navbar-nav ms-auto">
+            {% for menu_item in navigation_menu.menu_items %}
+            <li class="nav-item">
+                <a class="{% if menu_item.label == 'Blog' %}active{% endif %}" href="/{{ menu_item.url }}">{{ menu_item.label }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block main %}
+        <!-- ========================= blog-roll section start ========================= -->
+    {% if not no_token %}
+    <section id="blog-roll" class="blog-roll-nav">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12">
+
+                    {% if category_slug %}
+                    <!-- Breadcrumb nav for categories view -->
+                    <div class="section-title text-center">
+                        <h2>Blog Posts by Category</h2>
+                        <ul class="breadcrumb-nav">
+                            <li><a href="{% url 'content:home' %}">Home</a></li>
+                            <li><a href="{% url 'content:blog' %}">Blog</a></li>
+                            <li>Category: {{ category_slug }}</li>
+                        </ul>
+                    </div>
+                    <!-- End Nav -->
+                    {% elif tag_slug %}
+                    <!-- Breadcrumb nav for posts by tag view -->
+                    <div class="section-title text-center">
+                        <h2>Blog Posts by Tag</h2>
+                        <ul class="breadcrumb-nav">
+                            <li><a href="{% url 'content:home' %}">Home</a></li>
+                            <li><a href="{% url 'content:blog' %}">Blog</a></li>
+                            <li>Tag: {{ tag_slug }}</li>
+                        </ul>
+                    </div>
+                    <!-- End Nav -->
+                    {% elif search_query %}
+                    <!-- Breadcrumb nav for search view -->
+                    <div class="section-title text-center">
+                        <h2>Search Results</h2>
+                        <ul class="breadcrumb-nav">
+                            <li><a href="{% url 'content:home' %}">Home</a></li>
+                            <li><a href="{% url 'content:blog' %}">Blog</a></li>
+                            <li>Seach: "{{search_query}}"</li>
+                        </ul>
+                    </div>
+                    <!-- End Nav -->
+                    {% else %}
+                    <!-- Breadcrumb nav for main blog.html view -->
+                    <div class="section-title text-center">
+                        <h2>All Blog Posts</h2>
+                        <ul class="breadcrumb-nav">
+                            <li><a href="{% url 'content:home' %}">Home</a></li>
+                            <li>All blog posts</li>
+                        </ul>
+                    </div>
+                    <!-- End Nav -->
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog Post -->
+    <section class="blog-posts">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8 blog-roll-cards">
+                    <div class="row"><!--nested row for blogroll-->
+                        {% for blog_post in blog_posts %}
+                        <div class="col-12 col-lg-6">
+                            <div class="blog-roll-card">
+                                <div class="blog-roll-card-meta">
+                                    <h2 class="blog-roll-card-header"><a href="{% url 'content:blog_post' slug=blog_post.slug %}">{{ blog_post.title }}</a></h2>
+                                    <ul class="blog-roll-card-meta-info">
+                                        <li>
+                                            <a href="javascript:void(0)"><img src="{% if blog_post.author.profile_image %}{{ blog_post.author.profile_image }}{% else %}{% static 'images/team/team-1.png' %}{% endif %}" alt="#">{{ blog_post.author.first_name }} {{ blog_post.author.last_name }}</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)"><i class="lni lni-calendar"></i> {{ blog_post.published }}
+                                        </a>
+                                        </li>
+                                        {% for tag in blog_post.tags %}
+                                        <li>
+                                            <a href="{% url 'content:blog_tags' tag.slug %}"><i class="lni lni-tag"></i> {{ tag.name }}</a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% if blog_post.featured_image %}
+                                <div class="single-post-thumbnail">
+                                    <img src="{{ blog_post.featured_image }}" alt="">
+                                </div>
+                                {% endif %}
+                                <div class="blog-roll-card-body">
+                                    <p>{{ blog_post.summary }}</p>
+                                </div>
+                                <div class="blog-roll-card-footer text-center">
+                                    <a href="{% url 'content:blog_post' slug=blog_post.slug %}" class="main-btn btn-hover">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                          <div>No blog posts found.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Widgets Column -->
+               {% include "content/partials/blog-search-and-categories.html" %}
+            </div>
+        </div>
+    </section>
+    <!-- ========================= blog-section end ========================= -->
+    {% endif %}
+{% endblock %}
+
+{% block js_extra %}
+{% endblock js_extra %}

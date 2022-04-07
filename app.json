@@ -1,0 +1,42 @@
+{
+    "name": "ButterCMS Django Starter Project ",
+    "description": "Drop-in proof-of-concept Django app, fully integrated with your ButterCMS account.",
+    "repository": "https://github.com/ButterCMS/django-starter-buttercms",
+    "logo": "https://cdn.buttercms.com/R3fbtvoRT2CqEQSmk8hb",
+    "keywords": ["django", "python", "buttercms", "cms", "blog"],
+    "buildpacks": [
+        {
+          "url": "heroku/python"
+        }
+    ],
+    "env": {
+        "DJANGO_SECRET_KEY": {
+            "description": "The secret key for the Django application.",
+            "generator": "secret"
+        },
+        "DJANGO_SETTINGS_MODULE": {
+            "description": "Path to Django's settings module",
+            "value": "config.settings.production"
+        },
+        "DJANGO_ADMIN_URL": {
+            "description": "URL for Django Admin",
+            "value": "/admin"
+        },
+        "DATABASE_URL": {
+            "description": "The default DB configuration for Django",
+            "value": "sqlite:///db.sqlite"
+        },
+        "BUTTERCMS_API_TOKEN": {
+            "description": "The API token of your ButterCMS account",
+            "value": ""
+        }
+    },
+    "environments": {
+        "test": {
+            "scripts": {
+            "test-setup": "python manage.py collectstatic --noinput",
+            "test": "python manage.py test"
+            }
+        }
+    }
+}
